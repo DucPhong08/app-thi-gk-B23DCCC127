@@ -12,6 +12,7 @@ import { Book, BookContextType } from '../types';
 // Giữ nguyên key để đọc được dữ liệu đã lưu từ phiên bản trước.
 const STORAGE_KEY = '@LIBRARY_BOOKS_DATA';
 
+// Câu 6: năm sách mẫu dùng khi chưa có dữ liệu lưu.
 const INITIAL_BOOKS: Book[] = [
   {
     id: '1',
@@ -60,16 +61,19 @@ const INITIAL_BOOKS: Book[] = [
   },
 ];
 
+// Chia sẻ danh sách và các hàm xử lý giữa các màn hình.
 const BookContext = createContext<BookContextType | undefined>(undefined);
 
 export function BookProvider({ children }: { children: ReactNode }) {
   const [books, setBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Câu 6: đọc dữ liệu trên máy khi mở ứng dụng.
   useEffect(() => {
     async function loadBooks() {
       try {
         const json = await AsyncStorage.getItem(STORAGE_KEY);
+        // Bộ nhớ lưu chuỗi JSON; chưa có dữ liệu thì dùng sách mẫu.
         const data = json === null ? INITIAL_BOOKS : JSON.parse(json);
         if (json === null) {
           await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(data));
@@ -97,15 +101,18 @@ export function BookProvider({ children }: { children: ReactNode }) {
     }
   }
 
+  // Câu 2: tự tạo ID, đặt số đang mượn bằng 0, thêm sách lên đầu.
   function addBook(data: Omit<Book, 'id' | 'borrowed'>) {
     const book = { ...data, id: Date.now().toString(), borrowed: 0 };
     return saveBooks([book, ...books]);
   }
 
+  // Câu 2: thay sách cùng ID, giữ nguyên các sách còn lại.
   function updateBook(book: Book) {
     return saveBooks(books.map(item => (item.id === book.id ? book : item)));
   }
 
+  // Câu 3: chặn xoá sách đang mượn và hỏi xác nhận trước khi xoá.
   function deleteBook(bookId: string, onSuccess?: () => void) {
     const book = books.find(item => item.id === bookId);
     if (!book) return;
@@ -125,12 +132,14 @@ export function BookProvider({ children }: { children: ReactNode }) {
           const success = await saveBooks(
             books.filter(item => item.id !== bookId),
           );
+          // Nếu xoá từ màn chi tiết, gọi thêm hàm quay lại.
           if (success) onSuccess?.();
         },
       },
     ]);
   }
 
+  // Câu 4: còn sách mới cho mượn; tăng số đang mượn thêm 1.
   async function borrowBook(bookId: string) {
     const book = books.find(item => item.id === bookId);
     if (!book) return false;
@@ -143,6 +152,7 @@ export function BookProvider({ children }: { children: ReactNode }) {
     return success;
   }
 
+  // Câu 4: có sách đang mượn mới nhận trả; giảm số đang mượn đi 1.
   async function returnBook(bookId: string) {
     const book = books.find(item => item.id === bookId);
     if (!book) return false;
@@ -172,6 +182,7 @@ export function BookProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// Các màn hình gọi useBooks() để lấy dữ liệu và các hàm từ context.
 export function useBooks() {
   const context = useContext(BookContext);
   if (!context) throw new Error('useBooks phải dùng trong BookProvider');

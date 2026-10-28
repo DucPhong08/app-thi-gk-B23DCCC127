@@ -18,6 +18,7 @@ import { BOOK_CATEGORIES } from '../constants/categories';
 import { RootStackParamList } from '../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'BookForm'>;
+// Đổi năm nhỏ nhất ở đây; nhãn và thông báo lỗi cùng đổi theo.
 const MIN_YEAR = 1900;
 
 export default function BookFormScreen({ navigation, route }: Props) {
@@ -32,11 +33,15 @@ export default function BookFormScreen({ navigation, route }: Props) {
   );
   const [year, setYear] = useState(book ? String(book.year) : '');
   const [quantity, setQuantity] = useState(book ? String(book.quantity) : '');
+  // Lỗi theo tên ô, ví dụ errors.title là lỗi của ô tên sách.
   const [errors, setErrors] = useState<Record<string, string>>({});
+  // Khoá nút trong lúc chờ lưu để tránh nhấn lặp.
   const [saving, setSaving] = useState(false);
 
+  // Câu 2: kiểm tra các ô, lưu lỗi và trả true nếu tất cả hợp lệ.
   function validateForm() {
     const newErrors: Record<string, string> = {};
+    // TextInput trả chuỗi, cần đổi sang số để kiểm tra năm và số lượng.
     const yearNumber = Number(year);
     const quantityNumber = Number(quantity);
 
@@ -59,6 +64,7 @@ export default function BookFormScreen({ navigation, route }: Props) {
     return Object.keys(newErrors).length === 0;
   }
 
+  // Câu 2: kiểm tra trước, sau đó thêm hoặc sửa; lưu được mới báo thành công.
   async function handleSave() {
     if (!validateForm()) return;
 
@@ -83,6 +89,7 @@ export default function BookFormScreen({ navigation, route }: Props) {
     }
   }
 
+  // Câu 7: vùng an toàn và form cuộn được khi mở bàn phím.
   return (
     <SafeAreaView style={ui.container} edges={['left', 'right', 'bottom']}>
       <KeyboardAvoidingView

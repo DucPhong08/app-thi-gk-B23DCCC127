@@ -4,6 +4,7 @@ import { ui } from '../constants/theme';
 
 type Props = TouchableOpacityProps & { title: string };
 
+// Nút dùng chung: có hiệu ứng nhấn, bị khoá thì hiện màu xám.
 export default function Button({ title, style, disabled, ...props }: Props) {
   return (
     <TouchableOpacity

@@ -4,6 +4,7 @@ import { colors, ui } from '../constants/theme';
 
 type Props = TextInputProps & { label: string; error?: string };
 
+// Ô nhập dùng chung: nhãn ở trên, lỗi ở dưới và viền đỏ khi sai.
 export default function FormField({ label, error, ...props }: Props) {
   return (
     <View>

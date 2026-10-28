@@ -11,7 +11,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'BookDetail'>;
 
 export default function BookDetailScreen({ route, navigation }: Props) {
   const { books, borrowBook, returnBook, deleteBook } = useBooks();
-  // Lấy từ state để chi tiết luôn cập nhật sau khi sửa hoặc mượn/trả.
+  // Câu 4: lấy sách theo ID từ state để chi tiết luôn cập nhật.
   const book = books.find(item => item.id === route.params.bookId);
 
   if (!book) {
@@ -22,6 +22,7 @@ export default function BookDetailScreen({ route, navigation }: Props) {
     );
   }
 
+  // Số cuốn còn có thể cho mượn = tổng số cuốn - số đang mượn.
   const remaining = book.quantity - book.borrowed;
 
   return (
@@ -40,6 +41,7 @@ export default function BookDetailScreen({ route, navigation }: Props) {
             {remaining === 0 ? ' — Hết sách' : ''}
           </Text>
         </View>
+        {/* Câu 4: nút mượn/trả bị khoá và đổi màu xám khi không hợp lệ. */}
         <Button
           title="Cho mượn (+1)"
           disabled={remaining <= 0}

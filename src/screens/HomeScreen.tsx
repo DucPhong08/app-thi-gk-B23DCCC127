@@ -20,12 +20,15 @@ type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
 export default function HomeScreen({ navigation }: Props) {
   const { books, deleteBook } = useBooks();
+  // Câu 5: lưu từ khoá và thể loại đang chọn.
   const [search, setSearch] = useState('');
   const [category, setCategory] = useState('Tất cả');
+  // Bỏ khoảng trắng thừa, đổi chữ thường để tìm không phân biệt hoa/thường.
   const query = search.trim().toLowerCase();
+  // Câu 1: cộng số cuốn đang mượn của tất cả đầu sách.
   const totalBorrowed = books.reduce((sum, book) => sum + book.borrowed, 0);
 
-  // Cả điều kiện tìm kiếm và thể loại phải đúng.
+  // Câu 5: tên hoặc tác giả khớp từ khoá, đồng thời khớp thể loại.
   const filteredBooks = books.filter(
     book =>
       (book.title.toLowerCase().includes(query) ||
@@ -33,6 +36,7 @@ export default function HomeScreen({ navigation }: Props) {
       (category === 'Tất cả' || book.category === category),
   );
 
+  // Câu 1, 3: thẻ sách mở chi tiết khi nhấn, gọi xoá khi nhấn giữ.
   function renderBook({ item }: { item: Book }) {
     const remaining = item.quantity - item.borrowed;
     return (
@@ -90,6 +94,7 @@ export default function HomeScreen({ navigation }: Props) {
         />
         <Text style={ui.muted}>Nhấn để xem chi tiết, nhấn giữ để xoá.</Text>
       </View>
+      {/* Chỉ hiển thị sách sau khi tìm/lọc; không có kết quả thì hiện lời nhắn. */}
       <FlatList
         data={filteredBooks}
         keyExtractor={item => item.id}

@@ -5,8 +5,8 @@ export interface Book {
   author: string;
   category: string;
   year: number;
-  quantity: number;
-  borrowed: number;
+  quantity: number; // Tổng số cuốn thư viện có.
+  borrowed: number; // Số cuốn đang được mượn.
 }
 
 // Tham số truyền giữa các màn hình trong Navigation

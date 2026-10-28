@@ -1,7 +1,8 @@
 import { StyleSheet } from 'react-native';
 
+// Bảng màu chung: sửa tại đây để các màn hình dùng cùng màu.
 export const colors = {
-  primary: '#1E40AF',
+  primary: '#2746afff',
   background: '#F3F4F6',
   card: '#FFFFFF',
   text: '#111827',

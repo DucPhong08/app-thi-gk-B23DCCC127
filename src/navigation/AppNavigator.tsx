@@ -8,10 +8,12 @@ import { useBooks } from '../context/BookContext';
 import { colors, ui } from '../constants/theme';
 import { RootStackParamList } from '../types';
 
+// Stack quản lý ba màn hình và thao tác quay lại.
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function AppNavigator() {
   const { isLoading } = useBooks();
+  // Đọc xong dữ liệu đã lưu mới cho người dùng thao tác.
   if (isLoading) {
     return (
       <View style={ui.content}>
